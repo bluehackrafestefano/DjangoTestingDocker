@@ -15,6 +15,8 @@ Deploy your applications in separate containers independently and in different l
 
 - Prepare Django project and push to github.
 
+### Dockerize Django
+
 - Create Dockerfile inside working directory;
 ```dockerfile
 # Select a base image which suits your usecase
@@ -31,6 +33,12 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
+# Docker checks if layers can be reused, if it finds that there are 
+# no changes to the requirements.txt file, it will jump straight 
+# to the COPY instruction, which will be resolved in a matter of seconds. 
+# With this tiny change, we speed up a lot the build process: No more 
+# waiting for minutes between builds each time that we modify something 
+# in our code.
 COPY requirements.txt /code/requirements.txt
 
 # Adding --no-cache-dir to the pip install command saves an 
@@ -40,6 +48,9 @@ COPY requirements.txt /code/requirements.txt
 # been created, this can be added to the pip install command.
 RUN pip install -r requirements.txt --no-cache-dir
 
+# Copy all the working directory to the container. Optionally a
+# `.dockerignore` file can be used not to copy unrelated things
+# to the continer and keep it smaller in size and less vulnerable
 COPY . /code/
 
 CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
@@ -59,5 +70,50 @@ docker run -d -p 8000:8000 django-testing
 
 - See your application up and running. But if you test the app you will see you did not apply migrations and create db tables. So open a terminal and migrate db tables.
 
-- 
 
+### Dockerize DataBase
+
+- In most cases, we use Postgresql for db layer. We can dockerize db too. 
+
+
+### .dockerignore
+
+- A standard .dockerignore file may be;
+```
+*.pyc
+*.pyo
+*.mo
+*.db
+*.css.map
+*.egg-info
+*.sql.gz
+.cache
+.project
+.idea
+.pydevproject
+.idea/workspace.xml
+.DS_Store
+.git/
+.sass-cache
+.vagrant/
+__pycache__
+dist
+docs
+env
+logs
+src/{{ project_name }}/settings/local.py
+src/node_modules
+web/media
+web/static/CACHE
+stats
+Dockerfile
+```
+
+### Best practices for containerizing Python applications
+
+- Use explicit and deterministic Docker base image tags for containerized Python applications.
+- Separate dependencies from source code.
+- Use Python WSGI for production.
+- Run containers with least possible privilege (and never as root).
+- Handle unhealthy states of your application. 
+- Find and fix security vulnerabilities in your Python Docker application image.
