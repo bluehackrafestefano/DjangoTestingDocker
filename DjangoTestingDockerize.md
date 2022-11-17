@@ -13,9 +13,13 @@ Innovate by collaborating with team members and other developers and by easily p
 Deliver multiple applications hassle free and have them run the same way on all your environments including design, testing, staging and production – desktop or cloud-native.
 Deploy your applications in separate containers independently and in different languages. Reduce the risk of conflict between languages, libraries or frameworks.
 
-- Prepare Django project and push to github.
+- Prepare Django project and push to github. 
 
-### Dockerize Django
+- There is no need to create a virtual environment. The Docker container is a self contained, one purpose tool which just have enough resources to run our code.
+
+## Dockerize Django
+
+### Build
 
 - Create Dockerfile inside working directory;
 ```dockerfile
@@ -61,6 +65,35 @@ CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
 docker build -t django-testing .
 ```
 
+### Share ( Optional )
+
+- To see how to manage Docker Hub repos see [documentation](https://docs.docker.com/docker-hub/repos/).
+
+- To push an image to Docker Hub first login Docker Hub using your terminal;
+```docker
+docker login
+```
+
+- The prompt will ask for username and password of your Docker Hub account. Enter them correctly.
+
+- The standard format of our image is `docker push <hub-user>/<repo-name>:<tag>`. So we have to tag our current image.
+```docker
+# docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+docker tag django-testing-slim1 stefanorafe/django-testing-slim1:v0.1
+```
+
+- Ready to push our image;
+```docker
+docker push stefanorafe/django-testing-slim1:v0.1
+```
+
+- Prune your images and run a new container using your published image! See the beauty and simplicity of the Docker.
+```docker
+docker run -d -p 8000:8000 stefanorafe/django-testing-slim1:v0.1
+```
+
+### Run
+
 - Make a container from the image you just created with the tag `django-testing`;
 ```docker
 docker run -d -p 8000:8000 django-testing
@@ -71,7 +104,7 @@ docker run -d -p 8000:8000 django-testing
 - See your application up and running. But if you test the app you will see you did not apply migrations and create db tables. So open a terminal and migrate db tables.
 
 
-### Dockerize DataBase
+### Docker Compose
 
 - In most cases, we use Postgresql for db layer. We can dockerize db too. 
 
@@ -107,6 +140,12 @@ web/media
 web/static/CACHE
 stats
 Dockerfile
+```
+
+### Cleanup
+- To remove all stopped containers, all unused networks, all images without at least one container associated to them, all build cache use the command below;
+```docker
+docker system prune -a
 ```
 
 ### Best practices for containerizing Python applications
