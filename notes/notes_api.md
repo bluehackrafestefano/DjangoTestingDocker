@@ -98,6 +98,7 @@ terraform plan -out=<path> — Save the plan file to a given path. Can then be p
 terraform apply -auto-approve — Apply changes without having to interactively type ‘yes’ to the plan. Useful in automation CI/CD pipelines.
 terraform destroy -auto-approve — Destroys the infrastructure without having to interactively type ‘yes’ to the plan. Useful in automation CI/CD pipelines
 
+
 ### K8s
 terraform apply
 aws eks --region $(terraform output -raw region) update-kubeconfig \
@@ -107,12 +108,25 @@ kubectl get nodes
 terraform destroy -auto-approve
 
 
-
-We’ll explore why you should:
-
+## Best practices
 Use explicit and deterministic Docker base image tags for containerized Python applications.
 Separate dependencies from source code.
 Use Python WSGI for production.
 Run containers with least possible privilege (and never as root).
 Handle unhealthy states of your application. 
 Find and fix security vulnerabilities in your Python Docker application image.
+
+
+## Volumes
+docker run -d \
+  -it \
+  --name devtest \
+  -v "$(pwd)"/target:/app \
+  nginx:latest
+
+
+## Using hadolint
+iwr -useb get.scoop.sh | iex
+scoop install hadolint
+hadolint <Dockerfile>
+docker run --rm -i hadolint/hadolint < Dockerfile

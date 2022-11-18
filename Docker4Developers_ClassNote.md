@@ -1,25 +1,70 @@
+
+<center><img src="ch13.png"  alt="Clarusway" width="600"/></center>
+<br>
+
+<center><h1> Django Class Notes</h1></center>
+<p>Clarusway<img align="right"
+  src="https://secure.meetupstatic.com/photos/event/3/1/b/9/600_488352729.jpeg"  width="15px"></p>
+<br>
+
+
 # Docker for Developers
 
+### Nice to have VSCode Extentions:
+- Djaneiro - Django Snippets
+- Docker
+- project-tree
+- hadolint
+
+### Needs
+- Python
+- pip
+- Docker Desktop
+- Docker Hub account
+
+## Summary
 - What is Docker?
+- Docker Hub
+- Dockerize Django
+  - .dockerignore
+  - Build
+  - Share
+  - Run
+- Dockerize React
+- Docker Compose
+  - Pereperation
+  - docker-compose file
+  - Build
+  - Cleanup
+- Docker Best practices
+
+<br>
+
+## What is Docker?
 Docker makes development efficient and predictable. It is working in my computer, but what about after deployment to the cloud?
 Docker takes away repetitive configuration tasks and is used throughout the development lifecycle for fast, easy and portable application development.
 
-- Build
+- **Build**
+
 Get a head start on your coding by leveraging Docker images to efficiently develop your own unique applications on any OS.  Create your multi-container application using Docker Compose.
 
-- Share
+- **Share**
+
 Leverage Docker Trusted Content, including Docker Official Images and images from Docker Verified Publishers from the Docker Hub repository.
 Innovate by collaborating with team members and other developers and by easily publishing images to Docker Hub.
 
-- Run
+- **Run**
+
 Deliver multiple applications hassle free and have them run the same way on all your environments including design, testing, staging and production – desktop or cloud-native.
 Deploy your applications in separate containers independently and in different languages. Reduce the risk of conflict between languages, libraries or frameworks.
+
+## Docker Hub
+
+## Dockerize Django
 
 - Prepare Django project and push to github. 
 
 - There is no need to create a virtual environment. The Docker container is a self contained, one purpose tool which just have enough resources to run our code.
-
-## Dockerize Django
 
 - See the [Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
 
@@ -110,7 +155,7 @@ CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
 docker build -t django-backend .
 ```
 
-### Share ( Optional )
+### Share
 
 - To see how to manage Docker Hub repos see [documentation](https://docs.docker.com/docker-hub/repos/).
 
@@ -209,9 +254,13 @@ Compose works in all environments: production, staging, development, testing, as
 
 - Compose specification concepts with a concrete example application is in the [documentation](https://docs.docker.com/compose/compose-file/#illustrative-example).
 
+### Pereperation
+
 - First, we need to prepare our folder structure. Create a new project main directory. Under that directory create two new directories named `api` and `client`. Put everything inside django project folder to the api/ and React project folder to client/.
 
 - Remove CMD line from Django Dockerfile. We will handle that command with docker-compose.yml using gunicorn.
+
+### docker-compose file
 
 - Create a `docker-compose.yml` file under main directory at the same level with api/ and client/;
 ```yml
@@ -278,6 +327,8 @@ volumes:
 - To understand the terminology, look at [documentation](https://docs.docker.com/compose/compose-file/compose-file-v3/).
 
 
+### Build
+
 Build the declared images and create containers with a single command;
 ```
 docker-compose up
@@ -293,17 +344,17 @@ docker-compose logs db
 
 ### Cleanup
 
-- To remove all stopped containers, all unused networks, all images without at least one container associated to them, all build cache use the command below;
-```docker
-docker system prune -a
-```
-
 - To clean up infrastructure created by docker compose, including volumes;
 ```
 docker-compose down -v
 ```
 
-### Best practices for containerizing Python applications
+- To remove all stopped containers, all unused networks, all images without at least one container associated to them, all build cache use the command below;
+```docker
+docker system prune -a
+```
+
+## Docker Best practices
 
 - Use explicit and deterministic Docker base image tags for containerized Python applications.
 - Separate dependencies from source code.
